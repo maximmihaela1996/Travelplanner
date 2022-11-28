@@ -91,5 +91,6 @@
             Height="40" Grid.ColumnSpan="2" Grid.RowSpan="2"
             FontSize="15" Click="btnRegister_Click"/>
         <Image x:Name="imgSignIn" Source="images/registration.png" Grid.Column="1" Grid.Row="1" Margin="170,60,170,0" Width="70" Height="70" Grid.ColumnSpan="2" Grid.RowSpan="2" RenderTransformOrigin="2.243,-0.407"></Image>
+ 
     </Grid>
 </Window>

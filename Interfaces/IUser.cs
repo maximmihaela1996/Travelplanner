@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Travelpal.Enums;
+using Travelpal.Models;
 
 namespace Travelpal.Interfaces
 {

@@ -84,5 +84,6 @@
             Width="130"
             Height="40" Click="btnRegistration_Click" Grid.RowSpan="3" />
         <Image x:Name="imgSignIn" Source="images/login.png" Grid.Column="1" Grid.Row="2" Margin="0 0 0 0" Width="100" Height="100"></Image>
+
     </Grid>
 </Window>

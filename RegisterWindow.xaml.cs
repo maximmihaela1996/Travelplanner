@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using Travelpal.Enums;
+using Travelpal.Interfaces;
 using Travelpal.Managers;
 using Travelpal.Models;
 
@@ -9,10 +11,10 @@ namespace Travelpal
     public partial class RegisterWindow : Window
     {
         private UserManager userManager =  new();
-        public RegisterWindow()
+        public RegisterWindow(UserManager userManager)
         {
             InitializeComponent();
-            //this.userManager = userManager;
+            this.userManager = userManager;
             cbChooseCountry.ItemsSource = Enum.GetValues(typeof(Countries));
         }
         private void btnRegister_Click(object sender, RoutedEventArgs e)
@@ -27,11 +29,11 @@ namespace Travelpal
                 if (userManager.AddNewUser(newUser))
                 {
                     MessageBox.Show("Congratulations! You have successfully registered! Now you can plan your trip", "Success!", MessageBoxButton.OK, MessageBoxImage.Information);
-                    Close();
-                }
+                    //userManager.UpdateList();
+                    this.Close();                }
                 else
                 {
-                    //else if don't meens that user is already taked
+                    // If the user is already taked
                     MessageBox.Show("The user it already exists", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }

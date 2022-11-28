@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using Travelpal.Enums;
 using Travelpal.Interfaces;
 using Travelpal.Models;
@@ -36,12 +38,12 @@ namespace Travelpal.Managers
          //Create new travel of type Vacation and assigned it with an user (gandalf)
             Vacation defaultVacation = new("Barcelona", Countries.Spain, 2, new DateTime(2023, 02, 01), new DateTime(2023, 02, 15), true, gandalf);
          //Add the new object (travel) into the travels list
-            gandalf.travels.Add(defaultVacation);
+            gandalf.UsersTravels.Add(defaultVacation);
 
          //Create new travel of type Trip and assigned it with an user (gandalf)
             Trip defaultTrip = new("Gdansk", Countries.Poland, 1, new DateTime(2022, 12, 23), new DateTime(2023, 12, 27), TripTypes.Leisure, gandalf);
          //Add the new object (trip) into the travels list
-            gandalf.travels.Add(defaultTrip);
+            gandalf.UsersTravels.Add(defaultTrip);
         }
 
         //Method that loops through the list and returns all the elements from the list
@@ -57,13 +59,13 @@ namespace Travelpal.Managers
                 //Check if the variables from the inputs matching with any in the list
                 if (user.Username == username && user.Password == password)
                 {
-                    //if yes, the object SignedIn is assigned the value of the object which was found in the list
+                    //If yes, the object SignedIn is assigned the value of the object which was found in the list
                     SignedIn = user;
                     //A user of type admin or user was found in the list - return true
                     return true;
                 }
              }
-            //no users who matching the parameters(username, password) was found - return false
+            //No users who matching the parameters(username, password) was found - return false
             return false;
         }
 
@@ -100,7 +102,7 @@ namespace Travelpal.Managers
             }
             return true;
         }
-
+        //Method that added a new user if the ValidateNewUser and ValidateUserExisting return true
         public bool AddNewUser(IUser newUser)
         {
             if (ValidateNewUser(newUser.Username, newUser.Password))
@@ -113,5 +115,6 @@ namespace Travelpal.Managers
             }
             return false;
         }
+        
     }
 }

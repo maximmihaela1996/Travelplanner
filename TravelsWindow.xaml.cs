@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,20 +22,68 @@ namespace Travelpal
     {
         private UserManager userManager;
         private TravelManager travelManager;
-        private IUser user;
-        public TravelsWindow(UserManager userManager, TravelManager travelManager, bool isUser)
+        private IUser SignedIn;
+        private bool isUser;
+        private User user;
+        public TravelsWindow(UserManager userManager, TravelManager travelManager, bool isUser, IUser SignedIn)
         {
             InitializeComponent();
             this.travelManager = travelManager;
             this.userManager = userManager;
-            this.user = user;
+            this.SignedIn = SignedIn;
 
+            lblUserName.Content =  userManager.SignedIn.Username;
+        }
+        // Updates the UI based on user type (user or admin)
+        private void UpdateUserUI()
+        {
+        //If the user is signed as User --> Desable the Button TravelDetails
             if (isUser)
             {
-                btnVerify.Content = "IsUser";
+                btnTravelDetails.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                btnAddTravel.Visibility = Visibility.Hidden;
+            } 
+        }
+
+        private void LoadTravelList()
+        {
+            lvTravels.Items.Clear();
+            if (isUser)
+            {
+                if (SignedIn is User)
+                {
+                    user = SignedIn as User;
+
+                    foreach (Travel travel in user.UsersTravels)
+                    {
+                        //this.user = SignedIn as User;
+                        ListViewItem listViewTravels = new();
+                        listViewTravels.Content = travel.GetInfo();
+                        lvTravels.Items.Add(listViewTravels);
+                    }
+                }
             }
             else if (!isUser)
-                btnVerify.Content = "IsAdmin";
+            {
+                foreach (Travel travel in travelManager.GetAllTravels())
+                {
+                    ListViewItem listViewItem = new();
+                    listViewItem.Tag = travel;
+                    listViewItem.Content = travel.GetInfo();
+                    lvTravels.Items.Add(listViewItem);
+                }
+            }
+        }
+
+        private void btnCloseWindow_Click(object sender, RoutedEventArgs e)
+        {
+            //Close the current window and open the Main window
+            this.Close();
+            MainWindow main = new();
+            main.Show();
         }
     }
 }

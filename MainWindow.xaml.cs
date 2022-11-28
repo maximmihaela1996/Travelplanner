@@ -1,6 +1,10 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
+using Travelpal.Interfaces;
 using Travelpal.Managers;
 using Travelpal.Models;
 namespace Travelpal
@@ -30,7 +34,7 @@ namespace Travelpal
         private void btnRegistration_Click(object sender, RoutedEventArgs e)
         {
             //create a RegisterWindow instans
-            RegisterWindow registerWindow = new();
+            RegisterWindow registerWindow = new(userManager);
             registerWindow.ShowDialog();
         }
         //SignIn Button which leads to the TravelWindow window if a user or admin is found
@@ -49,9 +53,13 @@ namespace Travelpal
 
                 if (isFoundUser)
                 {
-                    travelsWindow = new(userManager, travelManager, isUser);
-                    travelsWindow.Show();
-                    this.Close();
+                    List<IUser> users = userManager.GetAllUsers();
+                    foreach (IUser user in users)
+                    {
+                        travelsWindow = new(userManager, travelManager, isUser);
+                        travelsWindow.Show();
+                        this.Close();
+                    }
                 }
                 else
                 {
