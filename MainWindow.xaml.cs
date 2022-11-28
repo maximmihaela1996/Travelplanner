@@ -14,13 +14,14 @@ namespace Travelpal
         //Create a new instance of the userManager class
         private UserManager userManager;
         //Create a new instance of the travelManager class
-        private TravelManager travelManager;
+        private TravelManager? travelManager;
         //Create a new instance of class travelWindow
-        TravelsWindow travelsWindow;
+        //TravelsWindow travelsWindow ;
         public MainWindow()
         {
             InitializeComponent();
             this.userManager = new();
+
         }
         public MainWindow(UserManager userManager, TravelManager travelManager)
         {
@@ -40,38 +41,38 @@ namespace Travelpal
         //SignIn Button which leads to the TravelWindow window if a user or admin is found
         private void btnSignUp_Click(object sender, RoutedEventArgs e)
         {
+            List<IUser> users = userManager.GetAllUsers();
 
             string username = txtUsername.Text;
             string password = txtPassword.Password;
+            bool isFoundUser = false;
 
             if (txtUsername.Text != null && txtPassword != null)
             {
-                //var bool that which shows or not if a user exists in the list of users 
-                bool isFoundUser = userManager.SignInAsUserOrAdmin(username, password);
-                //var bool that which shows if the user is a User
-                bool isUser = userManager.SignInAsUser();
-
-                if (isFoundUser)
+                foreach (IUser user in users)
                 {
-                    List<IUser> users = userManager.GetAllUsers();
-                    foreach (IUser user in users)
+                    if (user.Username == username && user.Password == password)
                     {
-                        travelsWindow = new(userManager, travelManager, isUser);
-                        travelsWindow.Show();
-                        this.Close();
+                        isFoundUser = true;
+
+                        if (isFoundUser)
+                        {
+                            TravelsWindow travelsWindow = new(userManager, travelManager, user);
+                            travelsWindow.Show();
+                            this.Close();
+                        }
                     }
                 }
-                else
+                if (!isFoundUser)
                 {
-                    MessageBox.Show("Upps! Username or password does not matching");
-                    MessageBox.Show("Please fill in again or try to register you!");
+                    MessageBox.Show("Upps! Username or password does not matching!");
                 }
                 txtUsername.Clear();
                 txtPassword.Clear();
             }
             else
             {
-                Console.WriteLine("Fill in the files first!");
+                Console.WriteLine("Complete the files first!");
             }
         }
     }

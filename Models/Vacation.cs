@@ -10,8 +10,8 @@ namespace Travelpal.Models
     public class Vacation : Travel
     {
         public bool AllInclusive { get; set; }
-        public Vacation(string destination, Countries country, int travellers, DateTime startDate, DateTime endDate, bool allInclusive, User traveler) 
-            : base(destination, country, travellers, startDate, endDate, traveler)
+        public Vacation(string destination, Countries country, int travellers, bool allInclusive, User traveler) 
+            : base(destination, country, travellers, traveler)
         {
             this.AllInclusive = allInclusive;
         }

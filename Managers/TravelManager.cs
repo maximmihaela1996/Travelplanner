@@ -3,28 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Travelpal.Interfaces;
 using Travelpal.Models;
 
 namespace Travelpal.Managers
 {
     public class TravelManager
     {
-        private List<Travel> travels = new();
+        public List<string> TravelTypes { get; set; } = new() { "Trip", "Vacation" };
+        public TravelManager() { }
 
-        // Adding sent Travel object to list of travels
-        public void AddTravel(Travel travel)
+        // clasa de servicii = scop: prelucrari
+
+        public void AddNewTravel(Travel travel)
         {
-            travels.Add(travel);
+            
         }
-        // Removing sent Travel object from list of travels
-        public void RemoveTravel(Travel travel)
-        {
-            travels.Remove(travel);
-        }
-        // Method for accessing the private list of travels
-        public List<Travel> GetAllTravels()
-        {
-            return travels;
-        }
+
     }
 }

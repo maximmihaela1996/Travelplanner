@@ -15,7 +15,7 @@ namespace Travelpal.Managers
     public class UserManager
     {
         //Create a list of IUser (with user and admin type objects);
-        private List<IUser> UsersList = new();
+        public List<IUser> UsersList = new();
         public IUser SignedIn;
         public UserManager()
         {
@@ -23,7 +23,7 @@ namespace Travelpal.Managers
             CreateDefaultUsers();
         }
         // Method that create Default users and travels
-        private void CreateDefaultUsers()
+        public void CreateDefaultUsers()
         {
          //Create new user of type Admin
             Admin admin = new("admin", "password", Countries.Sweden);
@@ -36,14 +36,15 @@ namespace Travelpal.Managers
             UsersList.Add(gandalf);
 
          //Create new travel of type Vacation and assigned it with an user (gandalf)
-            Vacation defaultVacation = new("Barcelona", Countries.Spain, 2, new DateTime(2023, 02, 01), new DateTime(2023, 02, 15), true, gandalf);
+            Vacation defaultVacation = new("Alicante", Countries.Spain, 2, true, gandalf);
          //Add the new object (travel) into the travels list
-            gandalf.UsersTravels.Add(defaultVacation);
+            gandalf.travels.Add(defaultVacation);
+
 
          //Create new travel of type Trip and assigned it with an user (gandalf)
-            Trip defaultTrip = new("Gdansk", Countries.Poland, 1, new DateTime(2022, 12, 23), new DateTime(2023, 12, 27), TripTypes.Leisure, gandalf);
+            Trip defaultTrip = new("Belgrad", Countries.Serbia, 1, TripTypes.Work, gandalf);
          //Add the new object (trip) into the travels list
-            gandalf.UsersTravels.Add(defaultTrip);
+            gandalf.travels.Add(defaultTrip);
         }
 
         //Method that loops through the list and returns all the elements from the list

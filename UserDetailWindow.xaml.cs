@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace Travelpal
 {
     /// <summary>
-    /// Interaction logic for UserDetails.xaml
+    /// Interaction logic for UserDetailWindow.xaml
     /// </summary>
-    public partial class UserDetails : Window
+    public partial class UserDetailWindow : Window
     {
-        public UserDetails()
+        public UserDetailWindow()
         {
             InitializeComponent();
         }
