@@ -13,7 +13,6 @@ namespace Travelpal.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public Countries Location { get; set; }
-
         public Admin(string username, string password, Countries location)
         {
             Username = username;

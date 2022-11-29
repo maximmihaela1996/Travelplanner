@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Travelpal"
         mc:Ignorable="d"
-        Title="TravelsWindow" Height="450" Width="650">
+        Title="TravelsWindow" Height="450" Width="570">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
@@ -30,7 +30,7 @@
             Grid.Row="1"
             Height="30"
             Background="Orange"
-            Grid.ColumnSpan="5" 
+            Grid.ColumnSpan="4" 
             Margin="0,0,0,0" />
         <Label 
             Content="Welcome to the TravelPlanning: "
@@ -52,55 +52,70 @@
 
         <Button 
             x:Name="btnCloseWindow"
-            Grid.Column="3" 
+            Grid.Column="2" 
             Grid.Row="1"
             Margin="100,0,0,0" 
             Height="40"
             Width="35"  
-            Content="X" Background="Red" 
-            Grid.ColumnSpan="2" 
+            Content="X"
+            Background="Red" 
             HorizontalAlignment="Left" 
             Click="btnCloseWindow_Click"/>
 
         <Button x:Name="btnUserDetails" 
                 Content="View Users Details" 
                 FontSize="15" Background="AliceBlue" 
-                Grid.Column="2" Grid.Row="2" Width="130" 
-                Height="50" Grid.ColumnSpan="2" Margin="10,0,0,0" VerticalAlignment="Top" Click="btnUserDetails_Click"/>
+                Grid.Column="2" 
+                Grid.Row="2" 
+                Width="130" 
+                Height="50"
+                Click="btnUserDetails_Click"/>
+        
         <Button x:Name="btnTravelDetails" 
                 Content="View Travel Details" 
                 FontSize="15" Background="Orange" 
-                Grid.Column="3" Grid.Row="3"
- Width="130" 
-                Height="50" Click="btnTravelDetails_Click"/>
+                Grid.Column="2" 
+                Grid.Row="3"
+                Width="130" 
+                Height="50" 
+                Click="btnTravelDetails_Click"/>
 
         <Button x:Name="btnAddTravel" 
                 Content="Add Travel" 
-                FontSize="15" Background="Orange" 
-                Grid.Column="3" Grid.Row="4"
+                FontSize="15" 
+                Background="Orange" 
+                Grid.Column="2"
+                Grid.Row="4"
                 Width="130" 
-                Height="50" Click="btnAddTravel_Click"/>
+                Height="50"
+                Click="btnAddTravel_Click"/>
 
         <Button x:Name="btnDeleteTravel" 
                 Content="Delete Travel" 
                 FontSize="15" Background="Orange" 
-                Grid.Column="3" Grid.Row="5"
+                Grid.Column="2" 
+                Grid.Row="5"
                 Width="130" 
-                Height="50" Click="btnDeleteTravel_Click"/>
+                Height="50" 
+                Click="btnDeleteTravel_Click"/>
         <Button x:Name="btnAboutAs" 
                 Content="About As" 
-                FontSize="15" Background="Orange" 
-                Grid.Column="3" Grid.Row="6"
+                FontSize="15" 
+                Background="Orange" 
+                Grid.Column="2"
+                Grid.Row="6"
                 Width="130" 
                 Height="50"/>
         <Button x:Name="btnInfoApp" 
                 Content="InfoApp" 
-                FontSize="15" Background="Orange" 
-                Grid.Column="3" Grid.Row="7"
+                FontSize="15" 
+                Background="Orange" 
+                Grid.Column="2"
+                Grid.Row="7"
                 Width="130" 
                 Height="50"/>
 
-        <ListView x:Name="lvTravels" Grid.Column ="1" Grid.Row="2" Height="250" Grid.RowSpan="7"/>
+        <ListView x:Name="lvTravels" Grid.Column ="1" Grid.Row="2" Height="250" Grid.RowSpan="7" SelectionChanged="lvTravels_SelectionChanged"/>
 
 
     </Grid>

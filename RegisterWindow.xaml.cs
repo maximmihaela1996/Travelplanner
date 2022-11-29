@@ -11,6 +11,7 @@ namespace Travelpal
     public partial class RegisterWindow : Window
     {
         private UserManager userManager =  new();
+        
         public RegisterWindow(UserManager userManager)
         {
             InitializeComponent();

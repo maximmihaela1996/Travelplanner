@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,124 +19,138 @@ using Travelpal.Models;
 
 namespace Travelpal
 {
-    /// <summary>
-    /// Interaction logic for AddTravelWindow.xaml
-    /// </summary>
     public partial class AddTravelWindow : Window
     {
+        //Create a new instans of object User
         private User SignedIn;
+        //Create the instans of the userManager
         private UserManager userManager;
+        //Create the instans of the travelManager
         private TravelManager travelManager;
-        public AddTravelWindow(UserManager userManager, TravelManager travelManager, IUser signedIn)
+        public AddTravelWindow(UserManager userManager, TravelManager travelManager, User signedIn)
         {
             InitializeComponent();
-            this.SignedIn = signedIn as User;
+            //Initialize the object User with the user that is currently signed in
+            this.SignedIn = signedIn;
+            //Initialize userManager and travelManager
             this.userManager = userManager;
             this.travelManager = travelManager;
 
+            //Take Countries List from the class Enum
             cbCountry.ItemsSource = Enum.GetValues(typeof(Countries));
+            //Take the TravelType List from the userManager
             cbTravelType.ItemsSource = travelManager.TravelTypes;
             cbTripType.ItemsSource = Enum.GetValues(typeof(TripTypes));
         }
+        //  Method that determines which type of trip the user chooses (Trip, Vacation)
         private string FindOutTravelType()
         {
             if (cbTravelType.SelectedItem != null)
             {
                 if (cbTravelType.SelectedItem == "Trip")
                 {
+                    //If an element of the combo-box TravelTryp is selected -> return true
                     return "Trip";
-                    cbTripType.ItemsSource = Enum.GetValues(typeof(TripTypes));
                 }
                 else if (cbTravelType.SelectedItem == "Vacation")
                 {
+                    //If an element of the combo-box Vacation is selected -> return true
                     return "Vacation";
-                    cbAllInclusive.Visibility = Visibility.Visible;
                 }
             }
+            ////If no elements of the combo-box are selected -> return false
             return null;
         }
-        private bool ValidateInput()
+        // The method that changes the visibility of the combo-boxes depending on the user's choice
+        private void DesableEnableCb(string travelType)
         {
-            if ( !string.IsNullOrEmpty(txtDestination.Text) && !string.IsNullOrEmpty(txtTravellersNo.Text) && cbTravelType.SelectedItem != null && cbCountry.SelectedItem != null)
-                if (FindOutTravelType() == "Trip")
-                {
-                    if (cbTripType.SelectedItem != null)
-                    {
-                        return true;
-                    }else
-                    {
-                        MessageBox.Show("Please choose first a trip type!");
-                        return false;
-                    }
+            //When the user chooses a Trip type trip --> AllInclusive is deactivated and cb && lb Trip shows
+            if (travelType == "Trip")
+            {
+                cbAllInclusive.Visibility = Visibility.Hidden;
+                lbTripType.Visibility = Visibility.Visible;
+                cbTripType.Visibility = Visibility.Visible;
+                cbTripType.ItemsSource = Enum.GetValues(typeof(TripTypes));
+            }
+            else if (travelType == "Vacation")
+            {
+                lbTripType.Visibility = Visibility.Hidden;
+                cbTripType.Visibility = Visibility.Hidden;
+                cbAllInclusive.Visibility = Visibility.Visible;
+            }
+        }
+        // Bool method that verify if all fields are filled 
+        private bool VerifyTheInputs()
+        {
+            if (!string.IsNullOrEmpty(txtDestination.Text) && !string.IsNullOrEmpty(txtTravellersNo.Text) && cbTravelType.SelectedItem != null && cbCountry.SelectedItem != null)
+            {
+                if (cbTripType.SelectedItem != null)
+                { //If an element of the combo-box (Trip or vacation) is selected -> return true
+                    if (FindOutTravelType() == "Trip")
+                    {return true; }
+                    
+                    else if (FindOutTravelType() == "Vacation")
+                    {return true;}
+                }else
+                {//If no elements of the combo-box are selected -> return false
+                    MessageBox.Show("Please choose a trip type!");
                 }
-            else if (FindOutTravelType() == "Vacation")
-            {
-                    cbAllInclusive.Visibility = Visibility.Visible;
-                return true;
-            }else  
-            {
-                    MessageBox.Show("All the fields must be filled!");
             }
             return false;
         }
         private void btnAddTravel_Click(object sender, RoutedEventArgs e)
         {
-            if (ValidateInput())
-            {
+            //Verify if the Method VerifyTheInputs meet the requirements
+            if (VerifyTheInputs())
+                {
+                //If the travel is of the type Trip
                 if (FindOutTravelType() == "Trip")
-                {
-                    Trip newTrip = new(txtDestination.Text, (Countries)cbCountry.SelectedItem, Convert.ToInt32(txtTravellersNo.Text),(TripTypes)cbTripType.SelectedItem, SignedIn);
-                    travelManager.AddNewTravel(newTrip);
-                }else if (FindOutTravelType() == "Vacation")
-                {
-                    Vacation newVacation;
-
-                    if (cbAllInclusive.IsChecked == true)
                     {
-                        newVacation = new(txtDestination.Text, (Countries)cbCountry.SelectedItem, Convert.ToInt32(txtTravellersNo.Text), true, SignedIn);
-                    }
-                    else
-                    {
-                        newVacation = new(txtDestination.Text, (Countries)cbCountry.SelectedItem, Convert.ToInt32(txtTravellersNo.Text),false, SignedIn);
-                    }
-                    travelManager.AddNewTravel(newVacation);
-                }
+                    //Create a new object of type Trip 
+                        Trip newTrip = new(txtDestination.Text, (Countries)cbCountry.SelectedItem, Convert.ToInt32(txtTravellersNo.Text), (TripTypes)cbTripType.SelectedItem, SignedIn);
+                       //Send the new trip to the method AddNewTravel(from TravelManager) 
+                        travelManager.AddNewTravel(newTrip);
+                    //SignedIn.travels.Add(newTrip);
 
-                MessageBox.Show("Added!");
+                }//If the travel is of the type Trip
+                else if (FindOutTravelType() == "Vacation")
+                    {  
+                    //Create an empty object of type Vacation
+                        Vacation newVacation;
+                        //Verify if the the cb AllInclusive is checked
+                        if (cbAllInclusive.IsChecked == true)
+                        {
+                            //If yes, create a new object Vacation with the bool isAllInclusive  true;
+                            newVacation = new(txtDestination.Text, (Countries)cbCountry.SelectedItem, Convert.ToInt32(txtTravellersNo.Text), false, SignedIn);
+                            //Send the new trip to the method AddNewTravel(from TravelManager)     
+                            travelManager.AddNewTravel(newVacation);
+                        }
+                        else
+                        {
+                        //If yes, create a new object Vacation with the bool isAllInclusive  true;
+                            newVacation = new(txtDestination.Text, (Countries)cbCountry.SelectedItem, Convert.ToInt32(txtTravellersNo.Text), false, SignedIn);
+                            travelManager.AddNewTravel(newVacation);
+                        }
+                    }
+                    MessageBox.Show("Congratulations! Your travel has been successfully added!!");
+                    TravelsWindow travelsWindow = new(userManager, travelManager, (User)SignedIn);
+                    travelsWindow.ShowDialog();
                 this.Close();
             }
-        }
-
-        private void ModifyTravelType(string travelType)
-        {
-            if (travelType == "Trip")
+            // If the Method VerifyTheInputs doesn't meet the requirements -> Message
+            else if (!VerifyTheInputs())
             {
-                cbAllInclusive.Visibility = Visibility.Hidden;
-                //txtTripType.Visibility = Visibility.Visible;
-                cbTripType.Visibility = Visibility.Visible;
-                cbTripType.ItemsSource = Enum.GetValues(typeof(TripTypes)); ;
-            }
-            else if (travelType == "Vacation")
-            {
-                //txtTripType.Visibility = Visibility.Hidden;
-                cbTripType.Visibility = Visibility.Hidden;
-                cbAllInclusive.Visibility = Visibility.Visible; ;
+                MessageBox.Show("All fields must be filled!");
             }
         }
-
-        private void cbTravelType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cbTravelType_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-
+            cbTripType.Visibility = Visibility.Visible;
+            //Call the method to check if the cbTravel was selected and desable/enable the others cb
+            DesableEnableCb(FindOutTravelType());
         }
-
-        private void cbCountry_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
         private void cbTripType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ModifyTravelType(FindOutTravelType());
         }
     }
 }

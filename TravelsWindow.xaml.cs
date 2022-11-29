@@ -34,9 +34,9 @@ namespace Travelpal
             InitializeComponent();
             //Initialize userManager, travelManager and the user
             this.userManager = userManager;
-            this.travelManager = travelManager = new();
             this.SignedIn = SignedInAsUserOrAdmin;
-
+            this.travelManager = travelManager = new(userManager, SignedIn);
+           
             //If the user who is logged in is of the User type
             if (SignedInAsUserOrAdmin is User)
             {
@@ -68,14 +68,13 @@ namespace Travelpal
         private void LoadTravelList()
         {
             //lvTravels.Items.Clear();
-
             //Check the user is Admin
             if (!loggedAsUser)
             {
                 //If the list Travels have some travels in
-                if(userManager.UsersList != null)
+                if(UserManager.UsersList != null)
                 {
-                    foreach (var user in userManager.UsersList)
+                    foreach (var user in UserManager.UsersList)
                     {
                         if (user.GetType() == typeof(User))
                         {
@@ -91,9 +90,7 @@ namespace Travelpal
                                 lvTravels.Items.Add(listViewTravels);
                             }
                         }
-
                     }
-
                     //If there are no travelers in the list, displays a message
                 }
 
@@ -121,32 +118,64 @@ namespace Travelpal
             MainWindow main = new();
             main.Show();
         }
-        private void btnUserDetails_Click(object sender, RoutedEventArgs e)
-        {
-            UserDetailWindow userDetailWindow = new();
-            userDetailWindow.Show();
-            this.Close();
-        }
-
         private void btnTravelDetails_Click(object sender, RoutedEventArgs e)
         {
-            TravelDetailsWindow travelDetailsWindow = new();
-            travelDetailsWindow.Show();
-            this.Close();
-            
+            if (lvTravels.SelectedItem != null)
+            {
+                btnTravelDetails.IsEnabled = true;
+                ListViewItem selectedItem = lvTravels.SelectedItem as ListViewItem;
+                TravelsDetailWindow travelDetailsWindow = new(selectedItem.Tag as Travel, travelManager, SignedIn);
+                travelDetailsWindow.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("To be able to see the trip details, you must select a trip first ");
+            }
         }
-
         private void btnAddTravel_Click(object sender, RoutedEventArgs e)
         {
-            AddTravelWindow addTravelWindow = new(userManager, travelManager, SignedIn);
+            AddTravelWindow addTravelWindow = new(userManager, travelManager, (User)SignedIn);
             addTravelWindow.Show();
             this.Close();
         }
         private void btnDeleteTravel_Click(object sender, RoutedEventArgs e)
         {
-            DeleteTravelWindow removeTravel = new();
-            removeTravel.Show();
-            this.Close();
+            if (lvTravels.SelectedItem != null)
+            {
+                if (SignedIn is Admin)
+                {
+
+                    ListViewItem selectedItem = lvTravels.SelectedItem as ListViewItem;
+                    Travel selectedTravel = lvTravels.Tag as Travel;
+                    if (travelManager.DeleteTravel(selectedTravel)) 
+                    {
+                        MessageBox.Show("The travel was deleted succesfully!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Something went wrong!");
+                    }
+                      
+                }
+                else if (SignedIn is User)
+                {
+                    ListViewItem selectedItem = lvTravels.SelectedItem as ListViewItem;
+                    Travel selectedTravel = lvTravels.Tag as Travel;
+                    userManager.DeleteTravel(selectedTravel);
+                }
+            }
+            {
+                MessageBox.Show("To be able to delete a travel, you must select a travel first ");
+            }
+        }
+        private void btnUserDetails_Click(object sender, RoutedEventArgs e)
+        {
+            UserDetailsWindow userDetails = new(userManager, SignedIn);
+            userDetails.Show();
+        }
+        private void lvTravels_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

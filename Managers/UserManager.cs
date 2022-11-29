@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -15,12 +16,15 @@ namespace Travelpal.Managers
     public class UserManager
     {
         //Create a list of IUser (with user and admin type objects);
-        public List<IUser> UsersList = new();
+        public static List<IUser> UsersList = new();
         public IUser SignedIn;
         public UserManager()
         {
-         //Calling the create method which  create new objects of types User and Admin and objects of type travel(Trip, Vacation)
-            CreateDefaultUsers();
+            //Calling the create method which  create new objects of types User and Admin and objects of type travel(Trip, Vacation)
+            if (UsersList.Count == 0)
+            {
+                CreateDefaultUsers();
+            }
         }
         // Method that create Default users and travels
         public void CreateDefaultUsers()
@@ -116,6 +120,26 @@ namespace Travelpal.Managers
             }
             return false;
         }
-        
+        public bool UpdateUser(User userToUpdate)
+        {
+            for (int i = 0; i < UsersList.Count; i++)
+            {
+                if (UsersList[i] is User) {
+                    if (((User)UsersList[i]).UserId == userToUpdate.UserId)
+                    {
+                        UsersList[i].Username = userToUpdate.Username;
+                        UsersList[i].Password = userToUpdate.Password;
+
+                        return true;
+                    }
+                }
+             }
+            return false;
+        }
+
+        internal void DeleteTravel(Travel? travel)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
