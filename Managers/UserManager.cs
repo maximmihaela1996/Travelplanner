@@ -17,6 +17,7 @@ namespace Travelpal.Managers
     {
         //Create a list of IUser (with user and admin type objects);
         public static List<IUser> UsersList = new();
+        public static List<Travel> Travels = new();
         public IUser SignedIn;
         public UserManager()
         {

@@ -67,7 +67,7 @@ namespace Travelpal
         //Method that goes througt the list of Travels (in the travelManager)
         private void LoadTravelList()
         {
-            //lvTravels.Items.Clear();
+            lvTravels.Items.Clear();
             //Check the user is Admin
             if (!loggedAsUser)
             {
@@ -140,39 +140,36 @@ namespace Travelpal
         }
         private void btnDeleteTravel_Click(object sender, RoutedEventArgs e)
         {
-            if (lvTravels.SelectedItem != null)
+            if (lvTravels_SelectionChanged != null)
             {
                 if (SignedIn is Admin)
                 {
-
-                    ListViewItem selectedItem = lvTravels.SelectedItem as ListViewItem;
-                    Travel selectedTravel = lvTravels.Tag as Travel;
-                    if (travelManager.DeleteTravel(selectedTravel)) 
-                    {
-                        MessageBox.Show("The travel was deleted succesfully!");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Something went wrong!");
-                    }
-                      
+                    ListViewItem item = lvTravels.SelectedItem as ListViewItem;
+                    Travel selectedTravel = item.Tag as Travel;
+                    travelManager.DeleteTravel(selectedTravel);
+                    MessageBox.Show("The travel was succesfully deleted!");
+                    LoadTravelList();
                 }
                 else if (SignedIn is User)
                 {
-                    ListViewItem selectedItem = lvTravels.SelectedItem as ListViewItem;
-                    Travel selectedTravel = lvTravels.Tag as Travel;
-                    userManager.DeleteTravel(selectedTravel);
+                    ListViewItem item = lvTravels.SelectedItem as ListViewItem;
+                    Travel selectedTravel = item.Tag as Travel;
+                    travelManager.DeleteTravel(selectedTravel);
+                    userLogged.travels.Remove(selectedTravel);
                 }
             }
+            else
             {
-                MessageBox.Show("To be able to delete a travel, you must select a travel first ");
+                MessageBox.Show("Please click on the travel you want to remove");
             }
+
         }
         private void btnUserDetails_Click(object sender, RoutedEventArgs e)
         {
             UserDetailsWindow userDetails = new(userManager, SignedIn);
             userDetails.Show();
         }
+
         private void lvTravels_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 

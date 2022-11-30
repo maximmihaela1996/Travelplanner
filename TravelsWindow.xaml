@@ -115,7 +115,7 @@
                 Width="130" 
                 Height="50"/>
 
-        <ListView x:Name="lvTravels" Grid.Column ="1" Grid.Row="2" Height="250" Grid.RowSpan="7" SelectionChanged="lvTravels_SelectionChanged"/>
+        <ListView x:Name="lvTravels" Grid.Column="1" Grid.Row="2" Height="250" Grid.RowSpan="7" SelectionChanged="lvTravels_SelectionChanged"  />
 
 
     </Grid>
