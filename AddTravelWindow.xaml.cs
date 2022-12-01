@@ -27,11 +27,11 @@ namespace Travelpal
         private UserManager userManager;
         //Create the instans of the travelManager
         private TravelManager travelManager;
-        public AddTravelWindow(UserManager userManager, TravelManager travelManager, User signedIn)
+        public AddTravelWindow(UserManager userManager, TravelManager travelManager, User SignedIn)
         {
             InitializeComponent();
             //Initialize the object User with the user that is currently signed in
-            this.SignedIn = signedIn;
+            this.SignedIn = SignedIn;
             //Initialize userManager and travelManager
             this.userManager = userManager;
             this.travelManager = travelManager;
@@ -58,7 +58,7 @@ namespace Travelpal
                     return "Vacation";
                 }
             }
-            ////If no elements of the combo-box are selected -> return false
+            //If no elements of the combo-box are selected -> return false
             return null;
         }
         // The method that changes the visibility of the combo-boxes depending on the user's choice
@@ -84,12 +84,12 @@ namespace Travelpal
         {
             if (!string.IsNullOrEmpty(txtDestination.Text) && !string.IsNullOrEmpty(txtTravellersNo.Text) && cbTravelType.SelectedItem != null && cbCountry.SelectedItem != null)
             {
-                if (cbTripType.SelectedItem != null)
+                if (cbTravelType.SelectedItem != null)
                 { //If an element of the combo-box (Trip or vacation) is selected -> return true
                     if (FindOutTravelType() == "Trip")
                     {return true; }
                     
-                    else if (FindOutTravelType() == "Vacation")
+                    if (FindOutTravelType() == "Vacation")
                     {return true;}
                 }else
                 {//If no elements of the combo-box are selected -> return false
@@ -121,11 +121,10 @@ namespace Travelpal
                         if (cbAllInclusive.IsChecked == true)
                         {
                             //If yes, create a new object Vacation with the bool isAllInclusive  true;
-                            newVacation = new(txtDestination.Text, (Countries)cbCountry.SelectedItem, Convert.ToInt32(txtTravellersNo.Text), false, SignedIn);
+                            newVacation = new(txtDestination.Text, (Countries)cbCountry.SelectedItem, Convert.ToInt32(txtTravellersNo.Text), true, SignedIn);
                             //Send the new trip to the method AddNewTravel(from TravelManager)     
                             travelManager.AddNewTravel(newVacation);
-                        }
-                        else
+                        }else
                         {
                         //If yes, create a new object Vacation with the bool isAllInclusive  true;
                             newVacation = new(txtDestination.Text, (Countries)cbCountry.SelectedItem, Convert.ToInt32(txtTravellersNo.Text), false, SignedIn);
@@ -134,9 +133,10 @@ namespace Travelpal
                     }
                     MessageBox.Show("Congratulations! Your travel has been successfully added!!");
                     TravelsWindow travelsWindow = new(userManager, travelManager, (User)SignedIn);
-                    travelsWindow.ShowDialog();
-                this.Close();
+                    this.Close();
+                    travelsWindow.ShowDialog();   
             }
+
             // If the Method VerifyTheInputs doesn't meet the requirements -> Message
             else if (!VerifyTheInputs())
             {
@@ -151,6 +151,12 @@ namespace Travelpal
         }
         private void cbTripType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+        }
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            TravelsWindow travelsWindow = new(userManager, travelManager, SignedIn);
+            this.Close();
+            travelsWindow.ShowDialog();
         }
     }
 }

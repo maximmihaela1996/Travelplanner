@@ -6,9 +6,9 @@ using Travelpal.Models;
 
 namespace Travelpal
 {
-
     public partial class TravelsDetailWindow : Window
     {
+        //Travel, travelManager and SignedIn declaration
         Travel selectedTravel;
         private TravelManager travelManager;
         IUser SignedIn;
@@ -20,21 +20,29 @@ namespace Travelpal
             this.selectedTravel= selectedTravel;
             this.SignedIn = SignedIn;
 
+            //Check if it is a user or admin then load the infodetails for the travel in inputs
             if (SignedIn is Admin)
             {
                 LoadInfoTravel();
                 EnableTextboxes();
             }
-
+            if(SignedIn is User)
+            {
+                LoadInfoTravel();
+                EnableTextboxes();
+            }
         }
-
+        //Method that loading travels info
         public void LoadInfoTravel()
         {
             txtDestination.Text = selectedTravel.Destination;
             txtCountry.Text = selectedTravel.Country.ToString();
             txtTravellersNo.Text = selectedTravel.Travellers.ToString();
+            //Call the method that check which type traveled has 
             txtTravelType.Text = GetTravelType();
+
         }
+        // Method that returns what kind of travel it is (Trip, Vacation)
         public string GetTravelType()
         {
             string travelType;
@@ -44,10 +52,7 @@ namespace Travelpal
                 travelType = "Vacation";
                 lbAllInclusive.Visibility = Visibility.Visible;
                 txtAllInclusive.Visibility = Visibility.Visible;
-                if (((Vacation)selectedTravel).AllInclusive == true)
-                {
-                    txtAllInclusive.Text = "All Inclusive";
-                }
+                txtAllInclusive.Text = VerifyIfAllInclusive();
                 return travelType;
 
             }else if(selectedTravel is Trip)
@@ -61,6 +66,20 @@ namespace Travelpal
             }
             return null;
         }
+
+        public string VerifyIfAllInclusive() 
+        {
+            //Check if allInclusive is checked
+            if (((Vacation)selectedTravel).AllInclusive == true)
+            {
+                string isAllInclusive;
+                //Set the check box value into the inputs
+                isAllInclusive = "All Inclusive";
+                return isAllInclusive;
+            }
+            else { return txtAllInclusive.Text = "Standard";  }
+        }
+
         public void EnableTextboxes()
         {
             txtDestination.IsEnabled = false;
@@ -68,6 +87,7 @@ namespace Travelpal
             txtTravellersNo.IsEnabled = false;
             txtTravelType.IsEnabled = false;
             txtTripType .IsEnabled = false;
+            txtAllInclusive.IsEnabled = false;
         }
     }
 }

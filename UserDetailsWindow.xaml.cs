@@ -1,16 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Travelpal.Enums;
 using Travelpal.Interfaces;
 using Travelpal.Managers;
@@ -20,56 +9,45 @@ namespace Travelpal
 {
     public partial class UserDetailsWindow : Window
     {
+        private TravelManager travelManager;
         private UserManager userManager;
         private User SignedIn;
 
         private string newPassword;
         private string newUsername;
-        public UserDetailsWindow(UserManager userManager, IUser SignedIn)
+        public UserDetailsWindow(UserManager userManager, TravelManager travelManager, IUser SignedIn)
         {
             InitializeComponent();
+            this.travelManager = travelManager;
             this.userManager = userManager;
             this.SignedIn = SignedIn as User;
+            //Calling the method that loads the user's data into inputs
             SetUserDetails();
         }
+        //The method that takes the user's info and sets them in the inputs
         private void SetUserDetails()
         {
             txtUsername.Text = SignedIn.Username;
-            txtNewPassword.Password = SignedIn.Password;
             cbCountry.ItemsSource = Enum.GetValues(typeof(Countries));
             cbCountry.Text = SignedIn.Location.ToString();
         }
-
-        public bool VerifyOldPassword()
-        {
-                string verifyOldPassword = txtOldPassword.Password;
-
-                if (verifyOldPassword == SignedIn.Password)
-                {
-                    newPassword = txtNewPassword.Password;
-                    string confirmNewPassword = txtConfirmNewPassword.Password;
-                    if (newPassword == confirmNewPassword)
-                    {
-                        return true;
-                    }
-                }
-            return false;
-        }
-            private bool ValidateInputsUpdateUser()
+        //The method that checks if the inputs are correctly completed
+        private bool ValidateInputsUpdateUser()
             {
                 newUsername = txtUsername.Text;
-                if (userManager.ValidateUserExisting(newUsername, newPassword))
-                {
-                    string verifyOldPassword = txtOldPassword.Password;
+                newPassword = txtNewPassword.Password;
+                string confirmNewPassword = txtConfirmNewPassword.Password;
 
+            if (userManager.ValidateUserExisting(newUsername, newPassword))
+                {
+                   
+                    string verifyOldPassword = txtVerifyOldPassword.Password;
+                //Check if the user wrote the old password correctly
                     if (verifyOldPassword == SignedIn.Password)
                     {
-                        newPassword = txtNewPassword.Password;
-                        string confirmNewPassword = txtConfirmNewPassword.Password;
-
                         if (newPassword == confirmNewPassword)
                         {
-                            if (userManager.ValidateNewUser(newUsername, newPassword))
+                            if (userManager.ValidateNewUser(newUsername, newPassword)) //Call the method that verify user and pass length
                             {
                                 return true;
                             }
@@ -83,30 +61,35 @@ namespace Travelpal
         }
         private void btnChangeUserInfo_Click(object sender, RoutedEventArgs e)
         {
+            //Verify the condition above
           if (!ValidateInputsUpdateUser())
             {
                 MessageBox.Show("Please make sure that you entered the old password correctly and that the new password and the password confirmation meets the condition (it must be longer than 5 characters)");
             }
             if (ValidateInputsUpdateUser())
             {
+                //If it is true, assign the new updates to the current user and sends the user to the update method 
                 SignedIn.Password = newPassword;
                 SignedIn.Username = newUsername;
+                SignedIn.Location = (Countries)cbCountry.SelectedItem;
 
-                // userManager.UpdateUser(SignedIn);
-
-                if (userManager.UpdateUser(SignedIn))
+                if (userManager.UpdateUser(SignedIn)) // Send an updated obiect to the Method UpdateUser
                 {
-                    MessageBox.Show("The password was updated succesfully!");
+                    MessageBox.Show("The user was updated succesfully!");
                     MainWindow mainWindow = new();
-                    mainWindow.ShowDialog();
                     this.Close();
-                }
-                else
+                    mainWindow.ShowDialog();
+                } else
                 {
-                    MessageBox.Show("I could not the user");
+                    MessageBox.Show("The update could not be executed");
                 }
-
             }
+        }
+        private void btnCloseWindow_Click(object sender, RoutedEventArgs e)
+        {
+            TravelsWindow travelsWindow = new( userManager, travelManager, SignedIn);
+            travelsWindow.Show();
+            this.Close();
         }
     }
 }

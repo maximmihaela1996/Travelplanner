@@ -68,8 +68,7 @@ namespace Travelpal
                 }
                 txtUsername.Clear();
                 txtPassword.Clear();
-            }
-            else
+            }else
             {
                 Console.WriteLine("Complete the files first!");
             }

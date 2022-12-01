@@ -1,12 +1,6 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+
 using Travelpal.Enums;
 using Travelpal.Interfaces;
 using Travelpal.Models;
@@ -52,51 +46,24 @@ namespace Travelpal.Managers
             gandalf.travels.Add(defaultTrip);
         }
 
-        //Method that loops through the list and returns all the elements from the list
+        //Method that loops through the Userslist and returns all users from the list  --> Called in MainWindow when the user SignUp
         public List<IUser> GetAllUsers()
         {
             return UsersList;
         }
-        //Method that goes through all the entities of the user's list and returns true or false if a user is found or not
-        public bool SignInAsUserOrAdmin(string username, string password)
-        {
-            foreach (IUser user in UsersList)
-            {
-                //Check if the variables from the inputs matching with any in the list
-                if (user.Username == username && user.Password == password)
-                {
-                    //If yes, the object SignedIn is assigned the value of the object which was found in the list
-                    SignedIn = user;
-                    //A user of type admin or user was found in the list - return true
-                    return true;
-                }
-             }
-            //No users who matching the parameters(username, password) was found - return false
-            return false;
-        }
 
-        //Method that verify if the current user is of type User 
-        public bool SignInAsUser()
-        {
-            if(SignedIn is User)
-            {
-                return true;
-            }
-            return false;
-        }
-        //Method that return if username and password has a specific size and if the user is already existing
+        //Method that return if username and password has a specific size 
         public bool ValidateNewUser(string username, string password)
         {
             if (username.Length > 3 && password.Length > 5)
             {
                 return true;
-            }
-            else
+            }else
             {
                 return false;
             }
         }
-        //Method that return if an user is allready in the list
+        //Method that return if the user already exists
         public bool ValidateUserExisting(string username, string password)
         {
             foreach (IUser user in UsersList)
@@ -115,32 +82,34 @@ namespace Travelpal.Managers
             {
                 if (ValidateUserExisting(newUser.Username, newUser.Password))
                 {
+                    //Add newUser in the UsersList
                     UsersList.Add(newUser);
                     return true;
                 }
             }
             return false;
         }
+        // Method that updates the user
         public bool UpdateUser(User userToUpdate)
         {
+            //Goes through the entire list of users
             for (int i = 0; i < UsersList.Count; i++)
             {
+                //If the user is of the User type
                 if (UsersList[i] is User) {
+                    //Check each user in the list if it has the same Id with the user selected for update
                     if (((User)UsersList[i]).UserId == userToUpdate.UserId)
                     {
+                        //Update the password and username
                         UsersList[i].Username = userToUpdate.Username;
                         UsersList[i].Password = userToUpdate.Password;
+                        UsersList[i].Location = userToUpdate.Location;
 
                         return true;
                     }
                 }
              }
             return false;
-        }
-
-        internal void DeleteTravel(Travel? travel)
-        {
-            throw new NotImplementedException();
         }
     }
 }

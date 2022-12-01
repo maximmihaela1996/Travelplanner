@@ -31,44 +31,44 @@
             Grid.Column="1" 
             Grid.Row="1" 
             Grid.ColumnSpan="5"
-            Content="TravelPal!"
+            Content="User Info"
             FontFamily="Arial"
             HorizontalContentAlignment="Center" 
             Margin="0 0 0 100"
-            FontSize="35" FontWeight="Bold"
+            FontSize="30" FontWeight="Bold"
             Background="Orange"/>
         <Label 
             Content="Usernamn:" 
             Grid.Column="1" 
             Grid.Row="3"  
-            FontSize="20"/>
+            FontSize="15"/>
         <Label 
             Content="Old Password:" 
             Grid.Column="1" 
             Grid.Row="4"  
-            FontSize="20"/>
+            FontSize="15"/>
         <Label 
             Content="New Password:" 
             Grid.Column="1" 
             Grid.Row="5"  
-            FontSize="20"/>
+            FontSize="15"/>
         <Label 
             Content="Confirm New Password:" 
             Grid.Column="1" 
             Grid.Row="6"  
-            FontSize="20"/>
+            FontSize="15"/>
         <Label 
             Content="Country:" 
             Grid.Column="1" 
             Grid.Row="7"  
-            FontSize="20"/>
+            FontSize="15"/>
         <TextBox 
             x:Name="txtUsername" 
             Grid.Column="2" 
             Grid.Row="3"
             Width="160" Margin="0 3"/>
         <PasswordBox
-           x:Name="txtOldPassword"
+           x:Name="txtVerifyOldPassword"
             Grid.Column="2" 
             Grid.Row="4"
             Width="160" Margin="0 3"/>
@@ -90,14 +90,25 @@
             Background="Orange"/>
         <Button
             x:Name="btnChangeUserInfo" 
-            Content="Change UserInfo" 
+            Content="Save Changes" 
             Grid.Column="1" 
             Grid.Row="8"
-            Margin="130,30,130,20" 
+            Margin="0,30,130,20" 
             Background="Orange"
             Width="150"
             Height="40" Grid.ColumnSpan="2" Grid.RowSpan="2"
             FontSize="15" Click="btnChangeUserInfo_Click"/>
+
+        <Button
+            x:Name="btnCloseWindow" 
+            Content="Close " 
+            Grid.Column="2" 
+            Grid.Row="8"
+            Margin="30,30,0,20" 
+            Background="AliceBlue"
+            Width="150"
+            Height="40" Grid.ColumnSpan="2" Grid.RowSpan="2"
+            FontSize="15" Click="btnCloseWindow_Click" />
         <Image x:Name="imgSignIn" Source="images/registration.png" Grid.Column="1" Grid.Row="1" Margin="170,60,170,0" Width="70" Height="70" Grid.ColumnSpan="2" Grid.RowSpan="2" RenderTransformOrigin="2.243,-0.407"></Image>
     </Grid>
 </Window>

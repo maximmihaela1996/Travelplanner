@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Travelpal"
         mc:Ignorable="d"
-        Title="AddTravelWindow" Height="350" Width="400">
+        Title="AddTravelWindow" Height="380" Width="400">
     <Grid Background="#FFE9EBEA" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30"/>
@@ -43,22 +43,22 @@
             Grid.Column="1"
             Grid.Row="2"
             Content="Destination:"
-            FontSize="16"/>
+            FontSize="15"/>
         <Label
             Content="Country:"
             Grid.Column="1"
             Grid.Row="3"
-            FontSize="16"/>
+            FontSize="15"/>
         <Label
             Content="Travellers:"
             Grid.Column="1"
             Grid.Row="4"
-            FontSize="16"/>
+            FontSize="15"/>
         <Label
             Content="Travel Trip:"
             Grid.Column="1"
             Grid.Row="5"
-            FontSize="16"/>
+            FontSize="15"/>
         <Label
             x:Name="lbTripType"
             Grid.Column="1"
@@ -113,7 +113,7 @@
         
         <Button
             x:Name="btnAddTravel"
-            Grid.Column="2"
+            Grid.Column="1"
             Grid.Row="7"
             Background="Orange"
             FontSize="15"
@@ -121,6 +121,17 @@
             Height="40" 
             Content="Add Travel"
             Click="btnAddTravel_Click"/>
-      
+
+        <Button
+            x:Name="btnCancel"
+            Grid.Column="2"
+            Grid.Row="7"
+            Margin="10,0,0,0"
+            Background="AliceBlue"
+            FontSize="15"
+            Width="130"
+            Height="40" 
+            Content="Cancel" Click="btnCancel_Click"/>
+
     </Grid>
 </Window>

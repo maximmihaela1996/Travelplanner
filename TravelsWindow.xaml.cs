@@ -21,7 +21,7 @@ namespace Travelpal
 {
     public partial class TravelsWindow : Window
     {
-        //declare new instans av objects userManager, travelmanager, IUser, user, admin
+        //Declare new instans av objects userManager, travelmanager, IUser, user, admin
         //and a bool that vill check if the User is logged in as User or admin
         private UserManager userManager;
         private TravelManager travelManager;
@@ -36,7 +36,7 @@ namespace Travelpal
             this.userManager = userManager;
             this.SignedIn = SignedInAsUserOrAdmin;
             this.travelManager = travelManager = new(userManager, SignedIn);
-           
+
             //If the user who is logged in is of the User type
             if (SignedInAsUserOrAdmin is User)
             {
@@ -46,59 +46,56 @@ namespace Travelpal
                 loggedAsUser = true;
                 //set the label name as users name
                 lblUserName.Content = userLogged.Username;
-                //Hide the button TravelDetails (only the admin can access the travels details)
-                btnTravelDetails.Visibility = Visibility.Hidden;
                 //populate the listView with the user's travels
                 LoadTravelList();
             }
             //The same for Admin
-             else if (SignedInAsUserOrAdmin is Admin)
-             {
+            else if (SignedInAsUserOrAdmin is Admin)
+            {
                 this.adminLogged = SignedInAsUserOrAdmin as Admin;
                 loggedAsUser = false;
-                adminLogged = SignedInAsUserOrAdmin as Admin;
                 lblUserName.Content = adminLogged.Username;
                 //Hide AddTravel and UserDetails (only the user can access them)
-                btnAddTravel.IsEnabled = false; 
+                btnAddTravel.IsEnabled = false;
                 btnUserDetails.IsEnabled = false;
+                btnInfoApp.IsEnabled = false;
                 LoadTravelList();
             }
-        }     
+        }
         //Method that goes througt the list of Travels (in the travelManager)
         private void LoadTravelList()
         {
+            //Clear the list before loading it again
             lvTravels.Items.Clear();
-            //Check the user is Admin
             if (!loggedAsUser)
             {
-                //If the list Travels have some travels in
-                if(UserManager.UsersList != null)
+                //If the Users list has some travels 
+                if (UserManager.UsersList != null)
                 {
+                    //Go through the list of users
                     foreach (var user in UserManager.UsersList)
                     {
                         if (user.GetType() == typeof(User))
                         {
-                            //Go through the list
+                            //Go through the travel list of each user
                             foreach (Travel travel in ((User)user).travels)
                             {
                                 //Create a new listView and add all the travels into it
                                 ListViewItem listViewTravels = new();
                                 listViewTravels.Tag = travel;
-                                //Take the travel info with the method GetInfo (travel Class)
+                                //Take the travel info from the method GetInfo (travel Class)
                                 listViewTravels.Content = travel.GetInfo();
                                 //Display/Add the travels in the ListView
                                 lvTravels.Items.Add(listViewTravels);
                             }
                         }
                     }
-                    //If there are no travelers in the list, displays a message
                 }
-
-                else { lvTravels.Items.Add("Oops! No trips found"); }
+                else { lvTravels.Items.Add("Oops! No travels found"); }
+                //If there are no travels in the list, displays a message
             }
-
-            //The same for User
             else if (loggedAsUser)
+            {
                 if (userLogged.travels.Count() != 0)
                 {
                     foreach (Travel travel in userLogged.travels)
@@ -108,30 +105,33 @@ namespace Travelpal
                         listViewItem.Content = travel.GetInfo();
                         lvTravels.Items.Add(listViewItem);
                     }
-                }
-                else { lvTravels.Items.Add("Oops! No trips found"); }      
+                    //If there are no travels in the list, displays a message
+                }else { lvTravels.Items.Add("Oops! No travel found"); } 
+            }
         }
         private void btnCloseWindow_Click(object sender, RoutedEventArgs e)
-        {
-            //Close the current window and open the Main window
-            this.Close();
-            MainWindow main = new();
-            main.Show();
-        }
-        private void btnTravelDetails_Click(object sender, RoutedEventArgs e)
-        {
-            if (lvTravels.SelectedItem != null)
             {
-                btnTravelDetails.IsEnabled = true;
-                ListViewItem selectedItem = lvTravels.SelectedItem as ListViewItem;
-                TravelsDetailWindow travelDetailsWindow = new(selectedItem.Tag as Travel, travelManager, SignedIn);
-                travelDetailsWindow.ShowDialog();
+                //Close the current window and open the Main window
+                MainWindow mainWindow = new();
+                mainWindow.Show();
+                this.Close();
             }
-            else
+            private void btnTravelDetails_Click(object sender, RoutedEventArgs e)
             {
-                MessageBox.Show("To be able to see the trip details, you must select a trip first ");
+                //Verify if the user has selected a travel
+                if (lvTravels.SelectedItem != null)
+                {
+                    //Make the travelDetails button accessible
+                    btnTravelDetails.IsEnabled = true;
+                    ListViewItem selectedItem = (ListViewItem)lvTravels.SelectedItem;
+                    TravelsDetailWindow travelDetailsWindow = new((Travel)selectedItem.Tag, travelManager, SignedIn);
+                    travelDetailsWindow.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("To be able to see travel details, you must first select a travel from the list");
+                }
             }
-        }
         private void btnAddTravel_Click(object sender, RoutedEventArgs e)
         {
             AddTravelWindow addTravelWindow = new(userManager, travelManager, (User)SignedIn);
@@ -140,39 +140,59 @@ namespace Travelpal
         }
         private void btnDeleteTravel_Click(object sender, RoutedEventArgs e)
         {
+            //Verify if the user has selected a travel
             if (lvTravels_SelectionChanged != null)
             {
+                //Make the delete button accessible
+                btnDeleteTravel.IsEnabled = true;
+                //Verify if the user is Admin
                 if (SignedIn is Admin)
                 {
-                    ListViewItem item = lvTravels.SelectedItem as ListViewItem;
-                    Travel selectedTravel = item.Tag as Travel;
+                    ListViewItem item = (ListViewItem)lvTravels.SelectedItem;
+                    Travel selectedTravel = (Travel)item.Tag;
+                    //Call the DeleteTravel Method from travelManager
                     travelManager.DeleteTravel(selectedTravel);
                     MessageBox.Show("The travel was succesfully deleted!");
+                    //Load the travelList again
                     LoadTravelList();
                 }
+                //Same for user
                 else if (SignedIn is User)
                 {
-                    ListViewItem item = lvTravels.SelectedItem as ListViewItem;
-                    Travel selectedTravel = item.Tag as Travel;
-                    travelManager.DeleteTravel(selectedTravel);
-                    userLogged.travels.Remove(selectedTravel);
+                    ListViewItem item = (ListViewItem)lvTravels.SelectedItem;
+                    Travel selectedTravel = (Travel)item.Tag;
+                    travelManager.DeleteTravel(selectedTravel, SignedIn);
+                    MessageBox.Show("The userstravel was succesfully deleted!");
+                    LoadTravelList();
                 }
-            }
-            else
+            }else
             {
-                MessageBox.Show("Please click on the travel you want to remove");
+                //Message if no travel is selected
+                MessageBox.Show("Please click first on the travel you want to remove");
             }
-
         }
         private void btnUserDetails_Click(object sender, RoutedEventArgs e)
         {
-            UserDetailsWindow userDetails = new(userManager, SignedIn);
+            UserDetailsWindow userDetails = new(userManager, travelManager, SignedIn);
             userDetails.Show();
         }
-
         private void lvTravels_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void btnInfoApp_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(" Warning! " + "\n" +
+                  "1. Make sure you fill in all the information in the fields!" + "\n" +
+                  "2. Make sure that your username is not less than 3 characters and your password less than 5!" + "\n" +
+                  "3. Select first from the list if you want to delete a trip!" + "\n" +
+                  "4. Plan with us your unforgettable trip !", "Info");
+        }
+
+        private void btnAboutAs_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("With the travelPal application you can plan your trips efficiently, save time and energy!" + "\n \n" + "Let's go!", "Info");
         }
     }
 }

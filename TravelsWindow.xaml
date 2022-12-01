@@ -24,6 +24,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Label
@@ -54,13 +55,10 @@
             x:Name="btnCloseWindow"
             Grid.Column="2" 
             Grid.Row="1"
-            Margin="100,0,0,0" 
-            Height="40"
-            Width="35"  
+            Margin="100,0,0,0"  
             Content="X"
             Background="Red" 
-            HorizontalAlignment="Left" 
-            Click="btnCloseWindow_Click"/>
+            Click="btnCloseWindow_Click" Height="39" VerticalAlignment="Center"/>
 
         <Button x:Name="btnUserDetails" 
                 Content="View Users Details" 
@@ -70,7 +68,7 @@
                 Width="130" 
                 Height="50"
                 Click="btnUserDetails_Click"/>
-        
+
         <Button x:Name="btnTravelDetails" 
                 Content="View Travel Details" 
                 FontSize="15" Background="Orange" 
@@ -105,7 +103,7 @@
                 Grid.Column="2"
                 Grid.Row="6"
                 Width="130" 
-                Height="50"/>
+                Height="50" Click="btnAboutAs_Click"/>
         <Button x:Name="btnInfoApp" 
                 Content="InfoApp" 
                 FontSize="15" 
@@ -113,10 +111,9 @@
                 Grid.Column="2"
                 Grid.Row="7"
                 Width="130" 
-                Height="50"/>
+                Height="50" Click="btnInfoApp_Click"/>
 
         <ListView x:Name="lvTravels" Grid.Column="1" Grid.Row="2" Height="250" Grid.RowSpan="7" SelectionChanged="lvTravels_SelectionChanged"  />
-
-
+       
     </Grid>
 </Window>

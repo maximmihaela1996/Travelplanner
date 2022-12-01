@@ -10,25 +10,25 @@ namespace Travelpal.Models
     public class Travel
     {
         public int Id { get;}
-        //all the properties of a travel
+        //All the properties of a travel
         public string Destination { get; set; }
         public Countries Country { get; set; }
         public int Travellers { get; set; }
         public User Traveler { get; set; }
-        private int LastId = 0;
+
+        private static int LastId = 1; 
 
         //Constructor with parameters
         public Travel(string destination, Countries country, int travellers, User traveler)
         {
-            this.Id = LastId;
-            LastId = LastId + 1;
+            this.Id = LastId++;
             this.Destination = destination;
             this.Country = country;
             this.Travellers = travellers;
         }
         public virtual string GetInfo()
         {
-            return $"{Country} with destination {Destination} ";
+            return $"From: {Country} --> Destination: {Destination} ";
         }
     }
 }
